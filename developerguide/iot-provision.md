@@ -1,11 +1,18 @@
 # Device provisioning<a name="iot-provision"></a>
 
-Provisioning credentials for the devices in your fleet is a critical foundational step during the on-boarding process\. Ensuring that your devices have a **strong** unique identity, provides a high level of trust within your IoT platform\. The best practice for certificate distribution, like with any credentials management, is to ensure that there's a strong chain of trust in the process\. This means that you can prove who created the certificate and can validate who controlled the certificate all the way to being placed on the device\. We know this process can be challenging for both greenfield and brownfield devices\. AWS IoT has a number of services that can simplify the provisioning process\. 
+Provisioning credentials for the devices in your fleet is a critical foundational step during the on-boarding process\. Ensuring that your devices have a **strong** unique identity provides a high level of trust within your IoT platform\. The best practice for certificate distribution, like with any credentials management, is to ensure that there's a strong chain of trust in the distribution process\. This means that you can prove who created the certificate and who controlled the certificate all the way to being placed on the device\. 
 
-**Select the option that fits your situation best**
-+ 
+### What are the risks involved with an insecure provisioning process?
+An attacker who can inject themself in the credential provisioning process, can poison the supply chain of devices. This would call into question the validity of the identity of **all** of your IoT devices and require all devices to be reprovisioned and the provisioning process to be reconfigured. Furthermore, with the ability to provision devices in AWS IoT, an attacker could start to observe and attack your IoT platform from within the system.
 
-**You can install certificates on IoT devices before they are delivered**  
+Fortunately, AWS IoT has a number of services that can provide a simple and **secure** provisioning solution\. 
+
+### MOST Recommended Provisioning Option ###
+**Install certificates on IoT devices before they are delivered, preferably into a Trusted Platform Module**  
+Installing a unique set of credentials before devices are delivered to end users can be the most secure option for provisioning. This is accomplished using our Just-In-Time-Provisioning service. An example of how this could be implemented is shown below:
+
+![Just-In-Time-Provisioning with ACM Root](https://code.ilovethe.cloud/pythia/jitp_aws_acm_root.png)
+
 If you can securely install unique client certificates on your IoT devices before they are delivered for use by the end user, you want to use [*just\-in\-time* provisioning \(JITP\)](jit-provisioning.md) or [*just\-in\-time* registration \(JITR\)](auto-register-device-cert.md)\.
 
   Using JITP and JITR, the certificate authority \(CA\) used to sign the device certificate is registered with AWS IoT and is recognized by AWS IoT when the device first connects\. The device is provisioned in AWS IoT on its first connection using the details of its provisioning template\.
