@@ -1,6 +1,6 @@
 # Device provisioning<a name="iot-provision"></a>
 
-AWS provides several different ways to provision a device and install unique client certificates on it\. This section describes each way and how to select the best one for your IoT solution\.
+Provisioning credentials for the devices in your fleet is a critical foundational step during the on-boarding process\. Ensuring that your devices have a **strong** unique identity, provides a high level of trust within your IoT platform\. The best practice for certificate distribution, like with any credentials management, is to ensure that there's a strong chain of trust in the process\. This means that you can prove who created the certificate and can validate who controlled the certificate all the way to being placed on the device\. We know this process can be challenging for both greenfield and brownfield devices\. AWS IoT has a number of services that can simplify the provisioning process\. 
 
 **Select the option that fits your situation best**
 + 
