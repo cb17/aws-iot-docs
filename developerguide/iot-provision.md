@@ -20,15 +20,12 @@ For more details on JITP and JITR, see [*just\-in\-time* provisioning \(JITP\)](
 
 An even better scenario is to use a Trusted Platform Module (TPM) to integrate into the JITP/JITR provisioning process. You can read more about TPMs here: https://aws.amazon.com/blogs/iot/using-a-trusted-platform-module-for-endpoint-device-security-in-aws-iot-greengrass/
 
-+ 
-
 **End users or installers can use an app to install certificates on their IoT devices**  
 If you cannot securely install unique client certificates on your IoT device before they are delivered to the end user, but the end user or an installer can use an app to register the devices and install the unique device certificates, you want to use the [provisioning by trusted user](provision-wo-cert.md#trusted-user) process\.
 
   Using a trusted user, such as an end user or an installer with a known account, can simplify the device manufacturing process\. Instead of a unique client certificate, devices have a temporary certificate that enables the device to connect to AWS IoT for only 5 minutes\. During that 5\-minute window, the trusted user obtains a unique client certificate with a longer life and installs it on the device\. The limited life of the claim certificate minimizes the risk of a compromised certificate\.
 
   For more information, see [Provisioning by trusted user](provision-wo-cert.md#trusted-user)\.
-+ 
 
 ### If the above recommended solutions don't work
 In some rare cases, we find customers that have use cases that don't fit with the above recommended solutions\. For those customers, they might need to use custom authentication mechanisms to authenticate the devices and return back a certificate. In these scenarios, you can use [Fleet Provisioning by claim](provision-wo-cert.md#claim-based) with a custom authorizer Lambda function. This provisioning process can be tricky to get right securely. So if you think this is the **only** provisioning process that will work best for you, we encourage you to consult with an AWS IoT expert or your AWS account team for further guidance.
