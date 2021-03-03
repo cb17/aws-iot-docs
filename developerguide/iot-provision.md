@@ -3,21 +3,23 @@
 Provisioning credentials for the devices in your fleet is a critical foundational step during the on-boarding process\. Ensuring that your devices have a **strong** unique identity provides a high level of trust within your IoT platform\. The best practice for certificate distribution, like with any credentials management, is to ensure that there's a strong chain of trust in the distribution process\. This means that you can prove who created the certificate and who controlled the certificate all the way to being placed on the device\. 
 
 ### What are the risks involved with an insecure provisioning process?
-An attacker who can inject themself in the credential provisioning process, can poison the supply chain of devices. This would call into question the validity of the identity of **all** of your IoT devices and require all devices to be reprovisioned and the provisioning process to be reconfigured. Furthermore, with the ability to provision devices in AWS IoT, an attacker could start to observe and attack your IoT platform from within the system.
+An attacker who can inject themself in the credential provisioning process, can poison the supply chain of devices\. This would call into question the validity of the identity of **all** of your IoT devices and require all devices to be reprovisioned and the provisioning process to be reconfigured\. Furthermore, with the ability to provision devices in AWS IoT, an attacker could start to observe and attack your IoT platform from within the system\.
 
 Fortunately, AWS IoT has a number of services that can provide a simple and **secure** provisioning solution\. 
 
-### MOST Recommended Provisioning Option ###
-**Install certificates on IoT devices before they are delivered, preferably into a Trusted Platform Module**  
-Installing a unique set of credentials before devices are delivered to end users can be the most secure option for provisioning. This is accomplished using our Just-In-Time-Provisioning service. An example of how this could be implemented is shown below:
+### MOST Recommended Provisioning Options
+
+**Install certificates on IoT devices before they are delivered**  
+Installing a unique set of credentials before devices are delivered to end users can be the most secure option for provisioning\. This is accomplished using our Just-In-Time-Provisioning service\. An example of how this could be implemented is shown below:
 
 ![Just-In-Time-Provisioning with ACM Root](https://code.ilovethe.cloud/pythia/jitp_aws_acm_root.png)
 
-If you can securely install unique client certificates on your IoT devices before they are delivered for use by the end user, you want to use [*just\-in\-time* provisioning \(JITP\)](jit-provisioning.md) or [*just\-in\-time* registration \(JITR\)](auto-register-device-cert.md)\.
+Using JITP and JITR, the certificate authority \(CA\) used to sign the device certificate is registered with AWS IoT and is recognized by AWS IoT when the device first connects\. The device is provisioned in AWS IoT on its first connection using the details of its provisioning template\.
 
-  Using JITP and JITR, the certificate authority \(CA\) used to sign the device certificate is registered with AWS IoT and is recognized by AWS IoT when the device first connects\. The device is provisioned in AWS IoT on its first connection using the details of its provisioning template\.
+For more details on JITP and JITR, see [*just\-in\-time* provisioning \(JITP\)](jit-provisioning.md) or [*just\-in\-time* registration \(JITR\)](auto-register-device-cert.md)\.
 
-  For more information on single thing, JITP, JITR, and bulk provisioning of devices that have unique certificates, see [Provisioning devices that have device certificates](provision-w-cert.md)\.
+An even better scenario is to use a Trusted Platform Module (TPM) to integrate into the JITP/JITR provisioning process. You can read more about TPMs here: https://aws.amazon.com/blogs/iot/using-a-trusted-platform-module-for-endpoint-device-security-in-aws-iot-greengrass/
+
 + 
 
 **End users or installers can use an app to install certificates on their IoT devices**  
@@ -28,12 +30,8 @@ If you cannot securely install unique client certificates on your IoT device bef
   For more information, see [Provisioning by trusted user](provision-wo-cert.md#trusted-user)\.
 + 
 
-**End users CANNOT use an app to install certificates on their IoT devices**  
-If neither of the previous options will work in your IoT solution, the [provisioning by claim](provision-wo-cert.md#claim-based) process is an option\. With this process, your IoT devices have a claim certificate that is shared by other devices in the fleet\. The first time a device connects with a claim certificate, AWS IoT registers the device using its provisioning template and issues the device its unique client certificate for subsequent access to AWS IoT
-
-   This option enables automatic provisioning of a device when it connects to AWS IoT, but could present a larger risk in the event of a compromised claim certificate\. If a claim certificate becomes compromised, you can deactivate the certificate\. Deactivating the claim certificate prevents all devices with that claim certificate from being registered in the future\. However; deactivating the claim certificate does not block devices that have already been provisioned\.
-
-  For more information, see [Provisioning by claim](provision-wo-cert.md#claim-based)\.
+### If the above recommended solutions don't work
+In some rare cases, we find customers that have use cases that don't fit with the above recommended solutions\. For those customers, they might need to use custom authentication mechanisms to authenticate the devices and return back a certificate. In these scenarios, you can use [Fleet Provisioning by claim](provision-wo-cert.md#claim-based) with a custom authorizer Lambda function. This provisioning process can be tricky to get right securely. So if you think this is the **only** provisioning process that will work best for you, we encourage you to consult with an AWS IoT expert or your AWS account team for further guidance.
 
 ## Provisioning devices in AWS IoT<a name="provisioning-in-iot"></a>
 
@@ -54,22 +52,3 @@ AWS IoT supports automated fleet provisioning using provisioning templates\. Pro
 
 You can use automated provisioning whether or not your devices have unique certificates \(and their associated private key\)\.
 
-## Fleet provisioning APIs<a name="provisioning-apis"></a>
-
-There are several categories of APIs used in fleet provisioning:
-+ These control plane functions create and manage the fleet provisioning templates and configure trusted user policies\.
-  + [CreateProvisioningTemplate](https://docs.aws.amazon.com/iot/latest/apireference/API_CreateProvisioningTemplate.html)
-  + [ CreateProvisioningTemplateVersion](https://docs.aws.amazon.com/iot/latest/apireference/API_CreateProvisioningTemplateVersion.html)
-  + [DeleteProvisioningTemplate](https://docs.aws.amazon.com/iot/latest/apireference/API_DeleteProvisioningTemplate.html)
-  + [DeleteProvisioningTemplateVersion](https://docs.aws.amazon.com/iot/latest/apireference/API_DeleteProvisioningTemplateVersion.html)
-  + [DescribeProvisioningTemplate](https://docs.aws.amazon.com/iot/latest/apireference/API_DescribeProvisioningTemplate.html)
-  + [DescribeProvisioningTemplateVersion](https://docs.aws.amazon.com/iot/latest/apireference/API_DescribeProvisioningTemplateVersion.html)
-  + [ListProvisioningTemplates](https://docs.aws.amazon.com/iot/latest/apireference/API_ListProvisioningTemplates.html)
-  + [ListProvisioningTemplateVersions](https://docs.aws.amazon.com/iot/latest/apireference/API_ListProvisioningTemplateVersions.html)
-  + [UpdateProvisioningTemplate](https://docs.aws.amazon.com/iot/latest/apireference/API_UpdateProvisioningTemplate.html)
-+ Trusted users can use this control plane function to generate a temporary onboarding claim\. This temporary claim is passed to the device during Wi\-Fi config or similar method\.
-  + [CreateProvisioningClaim](https://docs.aws.amazon.com/iot/latest/apireference/API_CreateProvisioningClaim.html)\.
-+ The MQTT API used during the provisioning process by devices with a provisioning claim certificate embedded in a device, or passed to it by a trusted user\.
-  + [CreateCertificateFromCsr](fleet-provision-api.md#create-cert-csr)
-  + [CreateKeysAndCertificate](fleet-provision-api.md#create-keys-cert)
-  + [RegisterThing](fleet-provision-api.md#register-thing)
