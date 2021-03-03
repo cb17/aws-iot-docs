@@ -28,7 +28,7 @@ If you cannot securely install unique client certificates on your IoT device bef
   For more information, see [Provisioning by trusted user](provision-wo-cert.md#trusted-user)\.
 
 ### If the above recommended solutions don't work
-In some rare cases, we find customers that have use cases that don't fit with the above recommended solutions\. For those customers, they might need to use custom authentication mechanisms to authenticate the devices and return back a certificate. In these scenarios, you can use [Fleet Provisioning by claim](provision-wo-cert.md#claim-based) with a custom authorizer Lambda function. This provisioning process can be tricky to get right securely. So if you think this is the **only** provisioning process that will work best for you, we encourage you to consult with an AWS IoT expert or your AWS account team for further guidance.
+In some rare cases, we find customers that have use cases that don't fit with the above recommended solutions\. For those customers, they might need to use custom authentication mechanisms to authenticate the devices and return back a certificate. An example of this might be if you're looking to migrate devices from a legacy IoT platform to AWS IoT that use an authentication protocol unsupported by AWS IoT. In these scenarios, you can use [Fleet Provisioning by claim](provision-wo-cert.md#claim-based) with a custom authorizer Lambda function. This provisioning process can be tricky to get right securely. So if you think this is the **only** provisioning process that will work best for you, we encourage you to consult with an AWS IoT expert or your AWS account team for further guidance.
 
 ## Provisioning devices in AWS IoT<a name="provisioning-in-iot"></a>
 
